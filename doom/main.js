@@ -99,6 +99,7 @@ WebAssembly.instantiateStreaming(fetch('doom.wasm'), importObject)
 
     canvas.focus();
 
+    var number_of_animation_frames = 0;
     /*Main game loop*/
     function step(timestamp) {
         ++number_of_animation_frames;
