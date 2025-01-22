@@ -95,11 +95,6 @@ WebAssembly.instantiateStreaming(fetch('doom.wasm'), importObject)
      ["spaceButton", 32],
      ["altButton", 0x80+0x38]].forEach(([elementID, keyCode]) => {
         console.log(elementID + " for " + keyCode);
-        var button = document.getElementById(elementID);
-        //button.addEventListener("click", () => {keyDown(keyCode); keyUp(keyCode)} );
-        button.addEventListener("touchstart", () => keyDown(keyCode));
-        button.addEventListener("touchend", () => keyUp(keyCode));
-        button.addEventListener("touchcancel", () => keyUp(keyCode));
     });
 
     canvas.focus();
