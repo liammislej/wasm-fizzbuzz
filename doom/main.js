@@ -3,7 +3,6 @@ var memory = new WebAssembly.Memory({ initial : 108 });
 
 
 function getMilliseconds() {
-    ++getms_calls;
     return performance.now();
 }
 
@@ -19,8 +18,6 @@ function drawCanvas(ptr) {
     var ctx = canvas.getContext('2d');
 
     ctx.putImageData(render_screen, 0, 0);
-
-    ++number_of_draws;
 }
 
 /*These functions will be available in WebAssembly. We also share the memory to share larger amounts of data with javascript, e.g. strings of the video output.*/
