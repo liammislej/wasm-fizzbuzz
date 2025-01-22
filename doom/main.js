@@ -9,11 +9,6 @@ function readWasmString(offset, length) {
     return new TextDecoder('utf8').decode(bytes);
 }
 
-function consoleLogString(offset, length) {
-    const string = readWasmString(offset, length);
-    console.log("\"" + string + "\"");
-}
-
 function appendOutput(style) {
     return function(offset, length) {
         const lines = readWasmString(offset, length).split('\n');
@@ -31,19 +26,6 @@ function appendOutput(style) {
     }
 }
 
-/*stats about how often doom polls the time*/
-const getmsps_stats = document.getElementById("getmsps_stats");
-const getms_stats = document.getElementById("getms_stats");
-var getms_calls_total = 0;
-var getms_calls = 0; // in current second
-window.setInterval(function() {
-    getms_calls_total += getms_calls;
-    getmsps_stats.innerText = getms_calls/1000 + "k";
-    getms_stats.innerText = getms_calls_total;
-    getms_calls = 0;
-}, 1000);
-
-
 function getMilliseconds() {
     ++getms_calls;
     return performance.now();
@@ -53,18 +35,6 @@ function getMilliseconds() {
 const canvas = document.getElementById('screen');
 const doom_screen_width = 320*2;
 const doom_screen_height = 200*2;
-
-/*printing stats*/
-const fps_stats = document.getElementById("fps_stats");
-const drawframes_stats = document.getElementById("drawframes_stats");
-var number_of_draws_total = 0;
-var number_of_draws = 0; // in current second
-window.setInterval(function(){
-    number_of_draws_total += number_of_draws;
-    drawframes_stats.innerText = number_of_draws_total;
-    fps_stats.innerText = number_of_draws;
-    number_of_draws = 0;
-}, 1000);
 
 function drawCanvas(ptr) {
     var doom_screen = new Uint8ClampedArray(memory.buffer, ptr, doom_screen_width*doom_screen_height*4)
@@ -155,29 +125,7 @@ WebAssembly.instantiateStreaming(fetch('doom.wasm'), importObject)
         button.addEventListener("touchcancel", () => keyUp(keyCode));
     });
 
-    /*hint that the canvas should have focus to capute keyboard events*/
-    const focushint = document.getElementById("focushint");
-    const printFocusInHint = function(e) {
-        focushint.innerText = "Keyboard events will be captured as long as the the DOOM canvas has focus.";
-        focushint.style.fontWeight = "normal";
-    };
-    canvas.addEventListener('focusin', printFocusInHint, false);
-
-    canvas.addEventListener('focusout', function(e) {
-        focushint.innerText = "Click on the canvas to capute input and start playing.";
-        focushint.style.fontWeight = "bold";
-    }, false);
-
     canvas.focus();
-    printFocusInHint();
-
-    /*printing stats*/
-    const animationfps_stats = document.getElementById("animationfps_stats");
-    var number_of_animation_frames = 0; // in current second
-    window.setInterval(function(){
-        animationfps_stats.innerText = number_of_animation_frames;
-        number_of_animation_frames = 0;
-    }, 1000);
 
     /*Main game loop*/
     function step(timestamp) {
