@@ -26,6 +26,9 @@ function drawCanvas(ptr) {
 /*These functions will be available in WebAssembly. We also share the memory to share larger amounts of data with javascript, e.g. strings of the video output.*/
 var importObject = {
     js: {
+        js_console_log: () => console.log('log'),
+        js_stdout: () => console.log('log'),
+        js_stderr: () => console.log('log'),
         js_milliseconds_since_start: getMilliseconds,
         js_draw_screen: drawCanvas,
     },
