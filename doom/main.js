@@ -1,30 +1,6 @@
 'use strict';
 var memory = new WebAssembly.Memory({ initial : 108 });
 
-/*stdout and stderr goes here*/
-const output = document.getElementById("output");
-
-function readWasmString(offset, length) {
-    const bytes = new Uint8Array(memory.buffer, offset, length);
-    return new TextDecoder('utf8').decode(bytes);
-}
-
-function appendOutput(style) {
-    return function(offset, length) {
-        const lines = readWasmString(offset, length).split('\n');
-        for (var i=0; i<lines.length; ++i) {
-            if (lines[i].length == 0) {
-                continue;
-            }
-            var t = document.createElement("span");
-            t.classList.add(style);
-            t.appendChild(document.createTextNode(lines[i]));
-            output.appendChild(t);
-            output.appendChild(document.createElement("br"));
-            t.scrollIntoView({behavior: "smooth", block: "end", inline: "nearest"}); /*smooth scrolling is experimental according to MDN*/
-        }
-    }
-}
 
 function getMilliseconds() {
     ++getms_calls;
@@ -35,6 +11,7 @@ function getMilliseconds() {
 const canvas = document.getElementById('screen');
 const doom_screen_width = 320*2;
 const doom_screen_height = 200*2;
+
 
 function drawCanvas(ptr) {
     var doom_screen = new Uint8ClampedArray(memory.buffer, ptr, doom_screen_width*doom_screen_height*4)
@@ -49,9 +26,6 @@ function drawCanvas(ptr) {
 /*These functions will be available in WebAssembly. We also share the memory to share larger amounts of data with javascript, e.g. strings of the video output.*/
 var importObject = {
     js: {
-        js_console_log: appendOutput("log"),
-        js_stdout: appendOutput("stdout"),
-        js_stderr: appendOutput("stderr"),
         js_milliseconds_since_start: getMilliseconds,
         js_draw_screen: drawCanvas,
     },
