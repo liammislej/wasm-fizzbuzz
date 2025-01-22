@@ -155,29 +155,7 @@ WebAssembly.instantiateStreaming(fetch('doom.wasm'), importObject)
         button.addEventListener("touchcancel", () => keyUp(keyCode));
     });
 
-    /*hint that the canvas should have focus to capute keyboard events*/
-    const focushint = document.getElementById("focushint");
-    const printFocusInHint = function(e) {
-        focushint.innerText = "Keyboard events will be captured as long as the the DOOM canvas has focus.";
-        focushint.style.fontWeight = "normal";
-    };
-    canvas.addEventListener('focusin', printFocusInHint, false);
-
-    canvas.addEventListener('focusout', function(e) {
-        focushint.innerText = "Click on the canvas to capute input and start playing.";
-        focushint.style.fontWeight = "bold";
-    }, false);
-
     canvas.focus();
-    printFocusInHint();
-
-    /*printing stats*/
-    const animationfps_stats = document.getElementById("animationfps_stats");
-    var number_of_animation_frames = 0; // in current second
-    window.setInterval(function(){
-        animationfps_stats.innerText = number_of_animation_frames;
-        number_of_animation_frames = 0;
-    }, 1000);
 
     /*Main game loop*/
     function step(timestamp) {
